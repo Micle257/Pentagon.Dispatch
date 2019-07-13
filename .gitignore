@@ -1,0 +1,11 @@
+# Build results
+debug/
+bin/
+obj/
+build/
+
+# VS
+.vs/
+
+# Resharper
+*.user
