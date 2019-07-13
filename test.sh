@@ -1,1 +1,2 @@
-sh /c/Users/Michal/Source/GitHub/test.sh Pentagon.EventBus
+sh /c/Users/Michal/Source/GitHub/test.sh Pentagon.Dispatch
+
