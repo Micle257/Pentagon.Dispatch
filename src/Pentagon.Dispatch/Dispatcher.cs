@@ -24,29 +24,27 @@ namespace Pentagon.Dispatch
             _serviceFactory = serviceFactory;
         }
 
-        public Task<TResponse> Execute<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken = default)
+        public Task<TResponse> ExecuteCommandAsync<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken = default)
                 where TRequest : ICommand<TResponse>
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
 
-            var requestType = request.GetType();
-
-            var s = typeof(ICommandHandler<,>).MakeGenericType(typeof(TRequest), typeof(TResponse));
-
-            var commandHandler = _serviceFactory.GetService(s);
-
-            if (commandHandler == null)
-                throw new ArgumentException(message: "Command handler is not registered in service provider.");
-
-            var commandHandler1 = (ICommandHandler<TRequest, TResponse>) commandHandler;
-
-            return commandHandler1.ExecuteAsync(request, cancellationToken);
-
-            // var handler = (CommandHandlerWrapper<TRequest, TResponse>) _requestHandlers.GetOrAdd(requestType,
-            //                                                                                      t => Activator.CreateInstance(typeof(CommandHandlerWrapper<,>).MakeGenericType(requestType, typeof(TResponse))));
+            //var s = typeof(ICommandHandler<,>).MakeGenericType(typeof(TRequest), typeof(TResponse));
             //
-            // return handler.Handle(request, cancellationToken, _serviceFactory);
+            //var commandHandler = _serviceFactory.GetService(s);
+            //
+            //if (commandHandler == null)
+            //    throw new ArgumentException(message: "Command handler is not registered in service provider.");
+            //
+            //var commandHandler1 = (ICommandHandler<TRequest, TResponse>) commandHandler;
+            //
+            //return commandHandler1.ExecuteAsync(request, cancellationToken);
+
+             var handler = (CommandHandlerWrapper<TRequest, TResponse>) _requestHandlers.GetOrAdd(typeof(TRequest),
+                                                                                                  t => Activator.CreateInstance(typeof(CommandHandlerWrapper<,>).MakeGenericType(typeof(TRequest), typeof(TResponse))));
+            
+             return handler.Handle(request, cancellationToken, _serviceFactory);
         }
     }
 }

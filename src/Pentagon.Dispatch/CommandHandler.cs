@@ -19,6 +19,6 @@ namespace Pentagon.Dispatch
         public abstract Task<TResponse> ExecuteAsync(TRequest request, CancellationToken cancellationToken);
 
         /// <inheritdoc />
-        public TResponse Execute(TRequest request) => ExecuteAsync(request, CancellationToken.None).Result;
+        public TResponse Execute(TRequest request) => ExecuteAsync(request, CancellationToken.None).GetAwaiter().GetResult();
     }
 }

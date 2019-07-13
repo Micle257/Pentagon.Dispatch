@@ -22,7 +22,7 @@ namespace Pentagon.Common.Dispatch.Tests
 
             var service = new Dispatcher(di);
 
-            var response1 = service.Execute<Command1, Response1>(new Command1()).Result;
+            var response1 = service.ExecuteCommandAsync<Command1, Response1>(new Command1()).Result;
         }
     }
 }

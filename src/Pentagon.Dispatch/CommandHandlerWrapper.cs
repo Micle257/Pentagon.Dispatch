@@ -27,7 +27,12 @@ namespace Pentagon.Dispatch
             return serviceFactory
                    .GetServices<IPipelineBehavior<TRequest, TResponse>>()
                    .Reverse()
-                   .Aggregate((CommandHandlerDelegate<TResponse>) Handler, (next, pipeline) => () => pipeline.Handle((TRequest) command, cancellationToken, next))();
+                   .Aggregate(Handler, Aggragate(command, cancellationToken))();
+
+            Func<CommandHandlerDelegate<TResponse>, IPipelineBehavior<TRequest, TResponse>, CommandHandlerDelegate<TResponse>> Aggragate(ICommand<TResponse> command1, CancellationToken cancellationToken1)
+            {
+                return (next, pipeline) => () => pipeline.Handle((TRequest) command1, cancellationToken1, next);
+            }
         }
 
         static THandler GetHandler<THandler>([NotNull] IServiceProvider services)
