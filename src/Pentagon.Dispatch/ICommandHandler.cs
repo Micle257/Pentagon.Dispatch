@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------
-//  <copyright file="IRequestHandler.cs">
+//  <copyright file="ICommandHandler.cs">
 //   Copyright (c) Michal Pokorný. All Rights Reserved.
 //  </copyright>
 // -----------------------------------------------------------------------

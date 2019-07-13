@@ -29,7 +29,7 @@
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2019.1.1" PrivateAssets="All" />
-    <ProjectReference Include="..\Pentagon.Common\Pentagon.Common.csproj" />
+    <PackageReference Include="Pentagon.Common" Version="2.0.0-beta1" />
   </ItemGroup>
 
 </Project>

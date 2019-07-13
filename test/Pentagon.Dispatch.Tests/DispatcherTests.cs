@@ -1,13 +1,13 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="DtoPropertyTests.cs">
+//  <copyright file="DispatcherTests.cs">
 //   Copyright (c) Michal Pokorný. All Rights Reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
-namespace Pentagon.Common.Tests.Dispatcher
+namespace Pentagon.Common.Dispatch.Tests
 {
-    using Dispatch;
     using Microsoft.Extensions.DependencyInjection;
+    using Pentagon.Dispatch;
     using Xunit;
 
     public class DispatcherTests

@@ -8,7 +8,6 @@ namespace Pentagon.Dispatch
 {
     using System;
     using System.Linq;
-    using System.Reflection;
     using Microsoft.Extensions.DependencyInjection;
 
     public static class DispatcherServiceCollectionExtensions

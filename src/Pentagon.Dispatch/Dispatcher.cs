@@ -37,11 +37,9 @@ namespace Pentagon.Dispatch
             var commandHandler = _serviceFactory.GetService(s);
 
             if (commandHandler == null)
-            {
-                throw new ArgumentException("Command handler is not registered in service provider.");
-            }
+                throw new ArgumentException(message: "Command handler is not registered in service provider.");
 
-            var commandHandler1 = (ICommandHandler<TRequest, TResponse>)commandHandler;
+            var commandHandler1 = (ICommandHandler<TRequest, TResponse>) commandHandler;
 
             return commandHandler1.ExecuteAsync(request, cancellationToken);
 

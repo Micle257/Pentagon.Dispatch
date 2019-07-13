@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------
-//  <copyright file="IRequest'1.cs">
+//  <copyright file="ICommand1.cs">
 //   Copyright (c) Michal Pokorný. All Rights Reserved.
 //  </copyright>
 // -----------------------------------------------------------------------

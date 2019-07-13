@@ -1,6 +1,13 @@
-﻿namespace Pentagon.Common.Tests.Dispatcher {
-    using Dispatch;
+﻿// -----------------------------------------------------------------------
+//  <copyright file="DispatcherServiceCollectionExtensionsTests.cs">
+//   Copyright (c) Michal Pokorný. All Rights Reserved.
+//  </copyright>
+// -----------------------------------------------------------------------
+
+namespace Pentagon.Common.Dispatch.Tests
+{
     using Microsoft.Extensions.DependencyInjection;
+    using Pentagon.Dispatch;
     using Xunit;
 
     public class DispatcherServiceCollectionExtensionsTests
@@ -24,7 +31,7 @@
         {
             var ser = new ServiceCollection();
 
-            ser.AddDispatcher(false);
+            ser.AddDispatcher();
 
             var di = ser.BuildServiceProvider();
 

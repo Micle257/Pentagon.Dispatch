@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Pentagon.Common.Dispatch\Pentagon.Common.Dispatch.csproj" />
+    <ProjectReference Include="..\..\src\Pentagon.Dispatch\Pentagon.Dispatch.csproj" />
   </ItemGroup>
 
   <ItemGroup>
