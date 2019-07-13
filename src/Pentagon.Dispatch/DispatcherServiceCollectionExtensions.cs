@@ -12,7 +12,7 @@ namespace Pentagon.Dispatch
 
     public static class DispatcherServiceCollectionExtensions
     {
-        public static IServiceCollection AddDispatcher(this IServiceCollection services, bool autoAddCommandHandlers = false)
+        public static IServiceCollection AddDispatcher(this IServiceCollection services, bool autoAddCommandHandlers = false, ServiceLifetime scope = ServiceLifetime.Scoped)
         {
             services.AddSingleton<IDispatcher>(c => new Dispatcher(c));
 
@@ -34,7 +34,7 @@ namespace Pentagon.Dispatch
                 if (interf == null)
                     continue;
 
-                services.AddTransient(interf, command);
+                services.Add(ServiceDescriptor.Describe(interf, command, scope));
             }
 
             return services;
