@@ -13,10 +13,42 @@ namespace Pentagon.Dispatch
     using JetBrains.Annotations;
     using Microsoft.Extensions.DependencyInjection;
 
-    class CommandHandlerWrapper<TRequest, TResponse>
+    abstract class CommandHandlerWrapper
+    {
+        protected static THandler GetHandler<THandler>(IServiceProvider services)
+                where THandler : class
+        {
+            THandler handler;
+
+            try
+            {
+                handler = (THandler)services.GetService(typeof(THandler)); ;
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException($"Error constructing handler for request of type {typeof(THandler)}. Register your handlers with the container.", e);
+            }
+
+            if (handler == null)
+            {
+                throw new InvalidOperationException($"Handler was not found for request of type {typeof(THandler)}. Register your handlers with the container.");
+            }
+
+            return handler;
+        }
+    }
+
+    abstract class CommandHandlerWrapper<TResponse> : CommandHandlerWrapper
+    {
+        public abstract Task<TResponse> Handle(ICommand<TResponse> request,
+                                               CancellationToken cancellationToken,
+                                               IServiceProvider serviceFactory);
+    }
+
+    class CommandHandlerWrapper<TRequest, TResponse> : CommandHandlerWrapper<TResponse>
             where TRequest : ICommand<TResponse>
     {
-        public Task<TResponse> Handle(ICommand<TResponse> command,
+        public override Task<TResponse> Handle(ICommand<TResponse> command,
                                       CancellationToken cancellationToken,
                                       IServiceProvider serviceFactory)
         {
@@ -33,29 +65,6 @@ namespace Pentagon.Dispatch
             {
                 return (next, pipeline) => () => pipeline.Handle((TRequest) command1, cancellationToken1, next);
             }
-        }
-
-        static THandler GetHandler<THandler>([NotNull] IServiceProvider services)
-                where THandler : class
-        {
-            if (services == null)
-                throw new ArgumentNullException(nameof(services));
-
-            THandler handler;
-
-            try
-            {
-                handler = (THandler) services.GetService(typeof(THandler));
-            }
-            catch (Exception e)
-            {
-                throw new InvalidOperationException($"Error constructing handler for request of type {typeof(THandler)}. Register your handlers with the container. See the samples in GitHub for examples.", e);
-            }
-
-            if (handler == null)
-                throw new InvalidOperationException($"Handler was not found for request of type {typeof(THandler)}. Register your handlers with the container. See the samples in GitHub for examples.");
-
-            return handler;
         }
     }
 }

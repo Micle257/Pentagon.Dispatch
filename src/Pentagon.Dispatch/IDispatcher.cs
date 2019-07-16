@@ -11,7 +11,6 @@ namespace Pentagon.Dispatch
 
     public interface IDispatcher
     {
-        Task<TResponse> ExecuteCommandAsync<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken = default)
-                where TRequest : ICommand<TResponse>;
+        Task<TResponse> ExecuteCommandAsync<TResponse>(ICommand<TResponse> request, CancellationToken cancellationToken = default);
     }
 }
