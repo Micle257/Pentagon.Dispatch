@@ -7,10 +7,11 @@
 namespace Pentagon.Dispatch
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using System.Threading.Tasks;
-    using JetBrains.Annotations;
     using Microsoft.Extensions.DependencyInjection;
 
     abstract class CommandHandlerWrapper
@@ -54,7 +55,7 @@ namespace Pentagon.Dispatch
         {
             var handler = GetHandler<ICommandHandler<TRequest, TResponse>>(serviceFactory);
 
-            Task<TResponse> Handler() => handler.ExecuteAsync((TRequest) command, cancellationToken);
+            Task<TResponse> Handler() => handler.ExecuteAsync((TRequest)command, cancellationToken);
 
             return serviceFactory
                    .GetServices<IPipelineBehavior<TRequest, TResponse>>()
@@ -63,7 +64,7 @@ namespace Pentagon.Dispatch
 
             Func<CommandHandlerDelegate<TResponse>, IPipelineBehavior<TRequest, TResponse>, CommandHandlerDelegate<TResponse>> Aggragate(ICommand<TResponse> command1, CancellationToken cancellationToken1)
             {
-                return (next, pipeline) => () => pipeline.Handle((TRequest) command1, cancellationToken1, next);
+                return (next, pipeline) => () => pipeline.Handle((TRequest)command1, cancellationToken1, next);
             }
         }
     }

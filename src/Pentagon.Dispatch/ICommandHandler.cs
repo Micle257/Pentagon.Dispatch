@@ -16,4 +16,7 @@ namespace Pentagon.Dispatch
 
         TResponse Execute(TRequest request);
     }
+
+    public interface ICommandHandler<in TRequest> : ICommandHandler<TRequest, VoidValue>
+            where TRequest : ICommand<VoidValue> { }
 }
