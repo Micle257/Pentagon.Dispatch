@@ -1,13 +1,16 @@
 // -----------------------------------------------------------------------
 //  <copyright file="DispatcherServiceCollectionExtensions.cs">
-//   Copyright (c) Michal Pokorný. All Rights Reserved.
+//   Copyright (c) Michal Pokornï¿½. All Rights Reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
 namespace Pentagon.Dispatch
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
+    using JetBrains.Annotations;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -35,7 +38,7 @@ namespace Pentagon.Dispatch
         {
             var commands = AppDomain.CurrentDomain
                                     .GetAssemblies()
-                                    .SelectMany(a => a.GetTypes())
+                                    .SelectMany(a => GetLoadableTypes(a))
                                     .Where(a => a.IsClass && !a.IsAbstract)
                                     .Distinct();
 
@@ -58,7 +61,7 @@ namespace Pentagon.Dispatch
         {
             var commands = AppDomain.CurrentDomain
                                     .GetAssemblies()
-                                    .SelectMany(a => a.GetTypes())
+                                    .SelectMany(a => GetLoadableTypes(a))
                                     .Where(a => a.IsClass && !a.IsAbstract)
                                     .Distinct();
 
@@ -75,6 +78,20 @@ namespace Pentagon.Dispatch
             }
 
             return services;
+        }
+
+        // move to Common
+        [NotNull]
+        public static IEnumerable<Type> GetLoadableTypes([NotNull] Assembly assembly)
+        {
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException e)
+            {
+                return e.Types.Where(t => t != null);
+            }
         }
     }
 }
