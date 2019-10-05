@@ -10,6 +10,7 @@ namespace Pentagon.Dispatch
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using Helpers;
     using JetBrains.Annotations;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -37,8 +38,7 @@ namespace Pentagon.Dispatch
         public static IServiceCollection AddDispatchPipelines(this IServiceCollection services, ServiceLifetime scope = ServiceLifetime.Scoped)
         {
             var commands = AppDomain.CurrentDomain
-                                    .GetAssemblies()
-                                    .SelectMany(a => GetLoadableTypes(a))
+                                    .GetLoadedTypes()
                                     .Where(a => a.IsClass && !a.IsAbstract)
                                     .Distinct();
 
@@ -60,8 +60,7 @@ namespace Pentagon.Dispatch
         public static IServiceCollection AddDispatchCommandHandlers(this IServiceCollection services, ServiceLifetime scope = ServiceLifetime.Scoped)
         {
             var commands = AppDomain.CurrentDomain
-                                    .GetAssemblies()
-                                    .SelectMany(a => GetLoadableTypes(a))
+                                    .GetLoadedTypes()
                                     .Where(a => a.IsClass && !a.IsAbstract)
                                     .Distinct();
 
@@ -78,20 +77,6 @@ namespace Pentagon.Dispatch
             }
 
             return services;
-        }
-
-        // move to Common
-        [NotNull]
-        public static IEnumerable<Type> GetLoadableTypes([NotNull] Assembly assembly)
-        {
-            try
-            {
-                return assembly.GetTypes();
-            }
-            catch (ReflectionTypeLoadException e)
-            {
-                return e.Types.Where(t => t != null);
-            }
         }
     }
 }

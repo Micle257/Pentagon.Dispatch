@@ -6,6 +6,8 @@
 
 namespace Pentagon.Dispatch
 {
+    using OperationResults;
+
     public abstract class OperationCommandHandler<TRequest, TResponse> : CommandHandler<TRequest, OperationResult<TResponse>>
             where TRequest : ICommand<OperationResult<TResponse>> { }
 }
