@@ -1,11 +1,7 @@
-# Build results
-debug/
-bin/
-obj/
-build/
-
-# VS
-.vs/
-
-# Resharper
+.vs
+build
+debug
+obj
+bin
 *.user
+nuget.config
