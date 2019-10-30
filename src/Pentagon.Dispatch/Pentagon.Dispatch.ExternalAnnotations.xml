@@ -6,13 +6,7 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
   </member>
-  <member name="M:Pentagon.Dispatch.DispatcherServiceCollectionExtensions.AddDispatch(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
-    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
-    <parameter name="services">
-      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
-    </parameter>
-  </member>
-  <member name="M:Pentagon.Dispatch.DispatcherServiceCollectionExtensions.AddDispathHandlers(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+  <member name="M:Pentagon.Dispatch.DispatcherServiceCollectionExtensions.AddDispatcherFacade(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     <parameter name="services">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />

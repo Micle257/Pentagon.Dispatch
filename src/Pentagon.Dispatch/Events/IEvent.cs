@@ -6,5 +6,6 @@
 
 namespace Pentagon.Dispatch.Events
 {
+    /// <summary> Represents a marker for event notification. </summary>
     public interface IEvent : IDispatchable { }
 }

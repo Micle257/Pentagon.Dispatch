@@ -18,9 +18,9 @@ namespace Pentagon.Dispatch
     public static class DispatcherServiceCollectionExtensions
     {
         [NotNull]
-        public static IServiceCollection AddDispatch([NotNull] this IServiceCollection services)
+        public static IServiceCollection AddDispatcherFacade([NotNull] this IServiceCollection services)
         {
-            services.AddSingleton<ICommandDispatcher, CommandDispatcher>();
+            services.AddSingleton<IDispatcherFacade, DispatcherFacade>();
 
             return services;
         }
@@ -29,32 +29,6 @@ namespace Pentagon.Dispatch
         public static IServiceCollection AddInMemoryCommandDispatcher([NotNull] this IServiceCollection services)
         {
             services.AddSingleton<ICommandDispatcher, CommandDispatcher>();
-
-            return services;
-        }
-
-        [NotNull]
-        public static IServiceCollection AddInMemoryEventDispatcher([NotNull] this IServiceCollection services)
-        {
-            services.AddSingleton<IEventDispatcher, EventDispatcher>();
-
-            return services;
-        }
-
-        [NotNull]
-        public static IServiceCollection AddInMemoryQueryDispatcher([NotNull] this IServiceCollection services)
-        {
-            services.AddSingleton<IQueryDispatcher, QueryDispatcher>();
-
-            return services;
-        }
-
-        [NotNull]
-        public static IServiceCollection AddDispathHandlers([NotNull] this IServiceCollection services)
-        {
-            services.AddCommandHandlers()
-                    .AddQueryHandlers()
-                    .AddEventHandlers();
 
             return services;
         }
@@ -83,24 +57,9 @@ namespace Pentagon.Dispatch
         }
 
         [NotNull]
-        public static IServiceCollection AddEventHandlers([NotNull] this IServiceCollection services)
+        public static IServiceCollection AddInMemoryQueryDispatcher([NotNull] this IServiceCollection services)
         {
-            var commands = AppDomain.CurrentDomain
-                                    .GetLoadedTypes()
-                                    .Where(a => a.IsClass && !a.IsAbstract)
-                                    .Distinct();
-
-            foreach (var command in commands)
-            {
-                var interfaces = command.GetInterfaces()
-                                        .Where(b => b.GenericTypeArguments.Length == 1)
-                                        .FirstOrDefault(a => a.GetGenericTypeDefinition() == typeof(IEventHandler<>));
-
-                if (interfaces == null)
-                    continue;
-
-                services.Add(ServiceDescriptor.Describe(serviceType: interfaces, implementationType: command, lifetime: ServiceLifetime.Singleton));
-            }
+            services.AddSingleton<IQueryDispatcher, QueryDispatcher>();
 
             return services;
         }
@@ -118,6 +77,37 @@ namespace Pentagon.Dispatch
                 var interfaces = command.GetInterfaces()
                                         .Where(b => b.GenericTypeArguments.Length == 2)
                                         .FirstOrDefault(a => a.GetGenericTypeDefinition() == typeof(IQueryHandler<,>));
+
+                if (interfaces == null)
+                    continue;
+
+                services.Add(ServiceDescriptor.Describe(serviceType: interfaces, implementationType: command, lifetime: ServiceLifetime.Singleton));
+            }
+
+            return services;
+        }
+
+        [NotNull]
+        public static IServiceCollection AddInMemoryEventDispatcher([NotNull] this IServiceCollection services)
+        {
+            services.AddSingleton<IEventDispatcher, EventDispatcher>();
+
+            return services;
+        }
+
+        [NotNull]
+        public static IServiceCollection AddEventHandlers([NotNull] this IServiceCollection services)
+        {
+            var commands = AppDomain.CurrentDomain
+                                    .GetLoadedTypes()
+                                    .Where(a => a.IsClass && !a.IsAbstract)
+                                    .Distinct();
+
+            foreach (var command in commands)
+            {
+                var interfaces = command.GetInterfaces()
+                                        .Where(b => b.GenericTypeArguments.Length == 1)
+                                        .FirstOrDefault(a => a.GetGenericTypeDefinition() == typeof(IEventHandler<>));
 
                 if (interfaces == null)
                     continue;

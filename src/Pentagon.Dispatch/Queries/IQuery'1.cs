@@ -6,5 +6,6 @@
 
 namespace Pentagon.Dispatch.Queries
 {
+    /// <summary> Represents a marker for query request with typed response. </summary>
     public interface IQuery<out TResponse> : IQuery { }
 }

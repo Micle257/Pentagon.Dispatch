@@ -6,5 +6,6 @@
 
 namespace Pentagon.Dispatch.Queries
 {
+    /// <summary> Represents a marker for query request. </summary>
     public interface IQuery : IDispatchable { }
 }

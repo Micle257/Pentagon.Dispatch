@@ -22,16 +22,17 @@ namespace Pentagon.Dispatch.Queries
         {
             using var scope       = _serviceFactory.CreateScope();
             var       handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResult));
-            dynamic   handler     = scope.ServiceProvider.GetRequiredService(handlerType);
+            dynamic   handler     = scope.ServiceProvider.GetRequiredService(serviceType: handlerType);
 
-            return await handler.HandleAsync((dynamic)query);
+            return await handler.HandleAsync((dynamic) query);
         }
 
-        public async Task<TResult> QueryAsync<TQuery, TResult>(TQuery query) where TQuery : class, IQuery<TResult>
+        public async Task<TResult> QueryAsync<TQuery, TResult>(TQuery query)
+                where TQuery : class, IQuery<TResult>
         {
             using var scope   = _serviceFactory.CreateScope();
             var       handler = scope.ServiceProvider.GetRequiredService<IQueryHandler<TQuery, TResult>>();
-            return await handler.HandleAsync(query);
+            return await handler.HandleAsync(query: query);
         }
     }
 }
