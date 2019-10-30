@@ -1,41 +1,66 @@
 // -----------------------------------------------------------------------
 //  <copyright file="DispatcherServiceCollectionExtensions.cs">
-//   Copyright (c) Michal Pokorn�. All Rights Reserved.
+//   Copyright (c) Michal Pokorný. All Rights Reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
 namespace Pentagon.Dispatch
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
+    using Commands;
+    using Events;
     using Helpers;
     using JetBrains.Annotations;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.DependencyInjection.Extensions;
+    using Queries;
 
     public static class DispatcherServiceCollectionExtensions
     {
-        public static IServiceCollection AddDispatcher(this IServiceCollection services, bool autoAddCommandHandlers = false, ServiceLifetime scope = ServiceLifetime.Scoped)
+        [NotNull]
+        public static IServiceCollection AddDispatch([NotNull] this IServiceCollection services)
         {
-            services.Add(ServiceDescriptor.Describe(typeof(IDispatcher), c => new Dispatcher(c), scope));
+            services.AddSingleton<ICommandDispatcher, CommandDispatcher>();
 
-            if (!autoAddCommandHandlers)
-                return services;
-
-            return services.AddDispatchCommandHandlers(ServiceLifetime.Transient);
+            return services;
         }
 
-        public static IServiceCollection AddDispatchPipeline<TPipeline, TRequest, TResponse>(this IServiceCollection services, ServiceLifetime scope = ServiceLifetime.Scoped)
-            where TPipeline : IPipelineBehavior<TRequest, TResponse>, new()
+        [NotNull]
+        public static IServiceCollection AddInMemoryCommandDispatcher([NotNull] this IServiceCollection services)
         {
-            services.Add(ServiceDescriptor.Describe(typeof(IPipelineBehavior<TRequest, TResponse>), typeof(TPipeline), scope));
+            services.AddSingleton<ICommandDispatcher, CommandDispatcher>();
 
-            return services.AddDispatchCommandHandlers(ServiceLifetime.Transient);
+            return services;
         }
 
-        public static IServiceCollection AddDispatchPipelines(this IServiceCollection services, ServiceLifetime scope = ServiceLifetime.Scoped)
+        [NotNull]
+        public static IServiceCollection AddInMemoryEventDispatcher([NotNull] this IServiceCollection services)
+        {
+            services.AddSingleton<IEventDispatcher, EventDispatcher>();
+
+            return services;
+        }
+
+        [NotNull]
+        public static IServiceCollection AddInMemoryQueryDispatcher([NotNull] this IServiceCollection services)
+        {
+            services.AddSingleton<IQueryDispatcher, QueryDispatcher>();
+
+            return services;
+        }
+
+        [NotNull]
+        public static IServiceCollection AddDispathHandlers([NotNull] this IServiceCollection services)
+        {
+            services.AddCommandHandlers()
+                    .AddQueryHandlers()
+                    .AddEventHandlers();
+
+            return services;
+        }
+
+        [NotNull]
+        public static IServiceCollection AddCommandHandlers([NotNull] this IServiceCollection services)
         {
             var commands = AppDomain.CurrentDomain
                                     .GetLoadedTypes()
@@ -44,20 +69,21 @@ namespace Pentagon.Dispatch
 
             foreach (var command in commands)
             {
-                var interf = command.GetInterfaces()
-                                    .Where(b => b.GenericTypeArguments.Length == 2)
-                                    .FirstOrDefault(a => a.GetGenericTypeDefinition() == typeof(IPipelineBehavior<,>));
+                var interfaces = command.GetInterfaces()
+                                        .Where(b => b.GenericTypeArguments.Length == 1)
+                                        .FirstOrDefault(a => a.GetGenericTypeDefinition() == typeof(ICommandHandler<>));
 
-                if (interf == null)
+                if (interfaces == null)
                     continue;
 
-                services.Add(ServiceDescriptor.Describe(interf, command, scope));
+                services.Add(ServiceDescriptor.Describe(serviceType: interfaces, implementationType: command, lifetime: ServiceLifetime.Singleton));
             }
 
             return services;
         }
 
-        public static IServiceCollection AddDispatchCommandHandlers(this IServiceCollection services, ServiceLifetime scope = ServiceLifetime.Scoped)
+        [NotNull]
+        public static IServiceCollection AddEventHandlers([NotNull] this IServiceCollection services)
         {
             var commands = AppDomain.CurrentDomain
                                     .GetLoadedTypes()
@@ -66,14 +92,37 @@ namespace Pentagon.Dispatch
 
             foreach (var command in commands)
             {
-                var interf = command.GetInterfaces()
-                                    .Where(b => b.GenericTypeArguments.Length == 2)
-                                    .FirstOrDefault(a => a.GetGenericTypeDefinition() == typeof(ICommandHandler<,>));
+                var interfaces = command.GetInterfaces()
+                                        .Where(b => b.GenericTypeArguments.Length == 1)
+                                        .FirstOrDefault(a => a.GetGenericTypeDefinition() == typeof(IEventHandler<>));
 
-                if (interf == null)
+                if (interfaces == null)
                     continue;
 
-                services.Add(ServiceDescriptor.Describe(interf, command, scope));
+                services.Add(ServiceDescriptor.Describe(serviceType: interfaces, implementationType: command, lifetime: ServiceLifetime.Singleton));
+            }
+
+            return services;
+        }
+
+        [NotNull]
+        public static IServiceCollection AddQueryHandlers([NotNull] this IServiceCollection services)
+        {
+            var commands = AppDomain.CurrentDomain
+                                    .GetLoadedTypes()
+                                    .Where(a => a.IsClass && !a.IsAbstract)
+                                    .Distinct();
+
+            foreach (var command in commands)
+            {
+                var interfaces = command.GetInterfaces()
+                                        .Where(b => b.GenericTypeArguments.Length == 2)
+                                        .FirstOrDefault(a => a.GetGenericTypeDefinition() == typeof(IQueryHandler<,>));
+
+                if (interfaces == null)
+                    continue;
+
+                services.Add(ServiceDescriptor.Describe(serviceType: interfaces, implementationType: command, lifetime: ServiceLifetime.Singleton));
             }
 
             return services;

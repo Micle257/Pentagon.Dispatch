@@ -1,10 +1,10 @@
 // -----------------------------------------------------------------------
-//  <copyright file="ICommand1.cs">
+//  <copyright file="IQuery'1.cs">
 //   Copyright (c) Michal Pokorný. All Rights Reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
-namespace Pentagon.Dispatch
+namespace Pentagon.Dispatch.Queries
 {
-    public interface ICommand<out TResponse> : ICommand { }
+    public interface IQuery<out TResponse> : IQuery { }
 }

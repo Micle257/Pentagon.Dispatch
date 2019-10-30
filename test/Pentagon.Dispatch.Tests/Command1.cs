@@ -6,7 +6,7 @@
 
 namespace Pentagon.Common.Dispatch.Tests
 {
-    using Pentagon.Dispatch;
+    using Pentagon.Dispatch.Queries;
 
-    public class Command1 : ICommand<Response1> { }
+    public class Command1 : IQuery<Response1> { }
 }

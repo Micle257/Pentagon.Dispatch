@@ -1,16 +1,16 @@
 // -----------------------------------------------------------------------
-//  <copyright file="IDispatcher.cs">
+//  <copyright file="IEventHandler.cs">
 //   Copyright (c) Michal Pokorný. All Rights Reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
-namespace Pentagon.Dispatch
+namespace Pentagon.Dispatch.Events
 {
-    using System.Threading;
     using System.Threading.Tasks;
 
-    public interface IDispatcher
+    public interface IEventHandler<in TEvent>
+            where TEvent : class, IEvent
     {
-        Task<TResponse> ExecuteCommandAsync<TResponse>(ICommand<TResponse> request, CancellationToken cancellationToken = default);
+        Task HandleAsync(TEvent @event);
     }
 }

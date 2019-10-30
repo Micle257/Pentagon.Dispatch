@@ -6,13 +6,12 @@
 
 namespace Pentagon.Common.Dispatch.Tests
 {
-    using System.Threading;
     using System.Threading.Tasks;
-    using Pentagon.Dispatch;
+    using Pentagon.Dispatch.Queries;
 
-    public class CommandHandler1 : CommandHandler<Command1, Response1>
+    public class CommandHandler1 : IQueryHandler<Command1, Response1>
     {
         /// <inheritdoc />
-        public override Task<Response1> ExecuteAsync(Command1 request, CancellationToken cancellationToken) => Task.FromResult(new Response1());
+        public Task<Response1> HandleAsync(Command1 query) => Task.FromResult(new Response1());
     }
 }

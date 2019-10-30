@@ -1,16 +1,18 @@
 // -----------------------------------------------------------------------
-//  <copyright file="IPipelineBehavior.cs">
+//  <copyright file="ICommandDispatcher.cs">
 //   Copyright (c) Michal Pokorný. All Rights Reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
-namespace Pentagon.Dispatch
+namespace Pentagon.Dispatch.Commands
 {
     using System.Threading;
     using System.Threading.Tasks;
+    using OperationResults;
 
-    public interface IPipelineBehavior<in TRequest, TResponse>
+    public interface ICommandDispatcher
     {
-        Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, CommandHandlerDelegate<TResponse> next);
+        Task<OperationResult> SendAsync<T>(T command, CancellationToken cancellationToken = default)
+                where T : class, ICommand;
     }
 }

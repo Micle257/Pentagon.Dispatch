@@ -7,7 +7,8 @@
 namespace Pentagon.Common.Dispatch.Tests
 {
     using Microsoft.Extensions.DependencyInjection;
-    using Pentagon.Dispatch;
+    using Pentagon.Dispatch.Queries;
+    using Threading;
     using Xunit;
 
     public class DispatcherTests
@@ -16,13 +17,13 @@ namespace Pentagon.Common.Dispatch.Tests
         public void AddDispatcher_ArgumentValueTrue_AddsHandlerToProvider()
         {
             var ser = new ServiceCollection()
-                    .AddTransient<ICommandHandler<Command1, Response1>, CommandHandler1>();
+                   .AddTransient<IQueryHandler<Command1, Response1>, CommandHandler1>();
 
             var di = ser.BuildServiceProvider();
 
-            var service = new Dispatcher(di);
+            var service = new QueryDispatcher(di.GetRequiredService<IServiceScopeFactory>());
 
-            var response1 = service.ExecuteCommandAsync(new Command1()).Result;
+            var response1 = service.QueryAsync(new Command1()).AwaitSynchronously();
         }
     }
 }
