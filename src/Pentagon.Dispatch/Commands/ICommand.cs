@@ -1,10 +1,11 @@
 // -----------------------------------------------------------------------
-//  <copyright file="IRequest'1.cs">
+//  <copyright file="ICommand.cs">
 //   Copyright (c) Michal Pokorný. All Rights Reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
-namespace Pentagon.Dispatch
+namespace Pentagon.Dispatch.Commands
 {
-    public interface ICommand<out TResponse> : ICommand { }
+    /// <summary> Represents a marker for command request. </summary>
+    public interface ICommand : IDispatchable { }
 }

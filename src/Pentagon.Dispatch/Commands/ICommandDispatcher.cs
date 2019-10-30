@@ -1,17 +1,18 @@
 // -----------------------------------------------------------------------
-//  <copyright file="IDispatcher.cs">
+//  <copyright file="ICommandDispatcher.cs">
 //   Copyright (c) Michal Pokorný. All Rights Reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
-namespace Pentagon.Dispatch
+namespace Pentagon.Dispatch.Commands
 {
     using System.Threading;
     using System.Threading.Tasks;
+    using OperationResults;
 
-    public interface IDispatcher
+    public interface ICommandDispatcher
     {
-        Task<TResponse> Execute<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken = default)
-                where TRequest : ICommand<TResponse>;
+        Task<OperationResult> SendAsync<T>(T command, CancellationToken cancellationToken = default)
+                where T : class, ICommand;
     }
 }

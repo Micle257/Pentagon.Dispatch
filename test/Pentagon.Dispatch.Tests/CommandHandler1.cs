@@ -1,14 +1,17 @@
-﻿namespace Pentagon.Common.Tests.Dispatcher {
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Dispatch;
+﻿// -----------------------------------------------------------------------
+//  <copyright file="CommandHandler1.cs">
+//   Copyright (c) Michal Pokorný. All Rights Reserved.
+//  </copyright>
+// -----------------------------------------------------------------------
 
-    public class CommandHandler1 : CommandHandler<Command1, Response1>
+namespace Pentagon.Common.Dispatch.Tests
+{
+    using System.Threading.Tasks;
+    using Pentagon.Dispatch.Queries;
+
+    public class CommandHandler1 : IQueryHandler<Command1, Response1>
     {
         /// <inheritdoc />
-        public override Task<Response1> ExecuteAsync(Command1 request, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(new Response1());
-        }
+        public Task<Response1> HandleAsync(Command1 query) => Task.FromResult(new Response1());
     }
 }

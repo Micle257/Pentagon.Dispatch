@@ -1,13 +1,14 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="DtoPropertyTests.cs">
+//  <copyright file="DispatcherTests.cs">
 //   Copyright (c) Michal Pokorný. All Rights Reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
-namespace Pentagon.Common.Tests.Dispatcher
+namespace Pentagon.Common.Dispatch.Tests
 {
-    using Dispatch;
     using Microsoft.Extensions.DependencyInjection;
+    using Pentagon.Dispatch.Queries;
+    using Threading;
     using Xunit;
 
     public class DispatcherTests
@@ -16,13 +17,13 @@ namespace Pentagon.Common.Tests.Dispatcher
         public void AddDispatcher_ArgumentValueTrue_AddsHandlerToProvider()
         {
             var ser = new ServiceCollection()
-                    .AddTransient<ICommandHandler<Command1, Response1>, CommandHandler1>();
+                   .AddTransient<IQueryHandler<Command1, Response1>, CommandHandler1>();
 
             var di = ser.BuildServiceProvider();
 
-            var service = new Dispatcher(di);
+            var service = new QueryDispatcher(di.GetRequiredService<IServiceScopeFactory>());
 
-            var response1 = service.Execute<Command1, Response1>(new Command1()).Result;
+            var response1 = service.QueryAsync(new Command1()).AwaitSynchronously();
         }
     }
 }

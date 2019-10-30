@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
 //  <copyright file="DispatcherServiceCollectionExtensions.cs">
-//   Copyright (c) Michal Pokorný. All Rights Reserved.
+//   Copyright (c) Michal PokornÃ½. All Rights Reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
@@ -8,34 +8,111 @@ namespace Pentagon.Dispatch
 {
     using System;
     using System.Linq;
-    using System.Reflection;
+    using Commands;
+    using Events;
+    using Helpers;
+    using JetBrains.Annotations;
     using Microsoft.Extensions.DependencyInjection;
+    using Queries;
 
     public static class DispatcherServiceCollectionExtensions
     {
-        public static IServiceCollection AddDispatcher(this IServiceCollection services, bool autoAddCommandHandlers = false)
+        [NotNull]
+        public static IServiceCollection AddDispatcherFacade([NotNull] this IServiceCollection services)
         {
-            services.AddSingleton<IDispatcher>(c => new Dispatcher(c));
+            services.AddSingleton<IDispatcherFacade, DispatcherFacade>();
 
-            if (!autoAddCommandHandlers)
-                return services;
+            return services;
+        }
 
+        [NotNull]
+        public static IServiceCollection AddInMemoryCommandDispatcher([NotNull] this IServiceCollection services)
+        {
+            services.AddSingleton<ICommandDispatcher, CommandDispatcher>();
+
+            return services;
+        }
+
+        [NotNull]
+        public static IServiceCollection AddCommandHandlers([NotNull] this IServiceCollection services)
+        {
             var commands = AppDomain.CurrentDomain
-                                    .GetAssemblies()
-                                    .SelectMany(a => a.GetTypes())
+                                    .GetLoadedTypes()
                                     .Where(a => a.IsClass && !a.IsAbstract)
                                     .Distinct();
 
             foreach (var command in commands)
             {
-                var interf = command.GetInterfaces()
-                                    .Where(b => b.GenericTypeArguments.Length == 2)
-                                    .FirstOrDefault(a => a.GetGenericTypeDefinition() == typeof(ICommandHandler<,>));
+                var interfaces = command.GetInterfaces()
+                                        .Where(b => b.GenericTypeArguments.Length == 1)
+                                        .FirstOrDefault(a => a.GetGenericTypeDefinition() == typeof(ICommandHandler<>));
 
-                if (interf == null)
+                if (interfaces == null)
                     continue;
 
-                services.AddTransient(interf, command);
+                services.Add(ServiceDescriptor.Describe(serviceType: interfaces, implementationType: command, lifetime: ServiceLifetime.Singleton));
+            }
+
+            return services;
+        }
+
+        [NotNull]
+        public static IServiceCollection AddInMemoryQueryDispatcher([NotNull] this IServiceCollection services)
+        {
+            services.AddSingleton<IQueryDispatcher, QueryDispatcher>();
+
+            return services;
+        }
+
+        [NotNull]
+        public static IServiceCollection AddQueryHandlers([NotNull] this IServiceCollection services)
+        {
+            var commands = AppDomain.CurrentDomain
+                                    .GetLoadedTypes()
+                                    .Where(a => a.IsClass && !a.IsAbstract)
+                                    .Distinct();
+
+            foreach (var command in commands)
+            {
+                var interfaces = command.GetInterfaces()
+                                        .Where(b => b.GenericTypeArguments.Length == 2)
+                                        .FirstOrDefault(a => a.GetGenericTypeDefinition() == typeof(IQueryHandler<,>));
+
+                if (interfaces == null)
+                    continue;
+
+                services.Add(ServiceDescriptor.Describe(serviceType: interfaces, implementationType: command, lifetime: ServiceLifetime.Singleton));
+            }
+
+            return services;
+        }
+
+        [NotNull]
+        public static IServiceCollection AddInMemoryEventDispatcher([NotNull] this IServiceCollection services)
+        {
+            services.AddSingleton<IEventDispatcher, EventDispatcher>();
+
+            return services;
+        }
+
+        [NotNull]
+        public static IServiceCollection AddEventHandlers([NotNull] this IServiceCollection services)
+        {
+            var commands = AppDomain.CurrentDomain
+                                    .GetLoadedTypes()
+                                    .Where(a => a.IsClass && !a.IsAbstract)
+                                    .Distinct();
+
+            foreach (var command in commands)
+            {
+                var interfaces = command.GetInterfaces()
+                                        .Where(b => b.GenericTypeArguments.Length == 1)
+                                        .FirstOrDefault(a => a.GetGenericTypeDefinition() == typeof(IEventHandler<>));
+
+                if (interfaces == null)
+                    continue;
+
+                services.Add(ServiceDescriptor.Describe(serviceType: interfaces, implementationType: command, lifetime: ServiceLifetime.Singleton));
             }
 
             return services;
