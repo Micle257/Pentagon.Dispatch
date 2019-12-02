@@ -6,4 +6,4 @@
 
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo(assemblyName: "Pentagon.Common.Dispatch.Tests")]
+[assembly: InternalsVisibleTo(assemblyName: "Pentagon.Dispatch.Tests")]

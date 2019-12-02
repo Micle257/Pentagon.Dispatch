@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <assembly name="Pentagon.Dispatch">
-  <member name="M:Pentagon.Dispatch.DispatcherServiceCollectionExtensions.AddCommandHandlers(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+  <member name="M:Pentagon.Dispatch.DispatcherServiceCollectionExtensions.AddCommandHandlers(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.DependencyInjection.ServiceLifetime)">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     <parameter name="services">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
@@ -12,13 +12,19 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
   </member>
-  <member name="M:Pentagon.Dispatch.DispatcherServiceCollectionExtensions.AddEventHandlers(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+  <member name="M:Pentagon.Dispatch.DispatcherServiceCollectionExtensions.AddEventHandlers(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.DependencyInjection.ServiceLifetime)">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     <parameter name="services">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
   </member>
   <member name="M:Pentagon.Dispatch.DispatcherServiceCollectionExtensions.AddInMemoryCommandDispatcher(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+    <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+    <parameter name="services">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+    </parameter>
+  </member>
+  <member name="M:Pentagon.Dispatch.DispatcherServiceCollectionExtensions.AddInMemoryDispatchAll(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.DependencyInjection.ServiceLifetime)">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     <parameter name="services">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
@@ -36,7 +42,7 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
   </member>
-  <member name="M:Pentagon.Dispatch.DispatcherServiceCollectionExtensions.AddQueryHandlers(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+  <member name="M:Pentagon.Dispatch.DispatcherServiceCollectionExtensions.AddQueryHandlers(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.DependencyInjection.ServiceLifetime)">
     <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     <parameter name="services">
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />

@@ -9,7 +9,7 @@
     <Company />
     <LangVersion>8.0</LangVersion>
     <PackageProjectUrl>https://github.com/Micle257/Pentagon.Extensions.Logging</PackageProjectUrl>
-    <PackageTags>dotnet;library;logging;</PackageTags>
+    <PackageTags>dotnet;library;cqrs;</PackageTags>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

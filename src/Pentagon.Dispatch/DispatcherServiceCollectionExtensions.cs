@@ -17,6 +17,24 @@ namespace Pentagon.Dispatch
 
     public static class DispatcherServiceCollectionExtensions
     {
+        /// <summary> Adds all services for in-memory dispatching. </summary>
+        /// <param name="services"> The services. </param>
+        /// <param name="serviceLifetime"> The service lifetime for command handlers. </param>
+        /// <returns> The services. </returns>
+        [NotNull]
+        public static IServiceCollection AddInMemoryDispatchAll([NotNull] this IServiceCollection services, ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
+        {
+            services.AddInMemoryCommandDispatcher()
+                    .AddInMemoryEventDispatcher()
+                    .AddInMemoryQueryDispatcher()
+                    .AddCommandHandlers(serviceLifetime)
+                    .AddQueryHandlers(serviceLifetime)
+                    .AddEventHandlers(serviceLifetime)
+                    .AddDispatcherFacade();
+
+            return services;
+        }
+
         [NotNull]
         public static IServiceCollection AddDispatcherFacade([NotNull] this IServiceCollection services)
         {
@@ -34,7 +52,7 @@ namespace Pentagon.Dispatch
         }
 
         [NotNull]
-        public static IServiceCollection AddCommandHandlers([NotNull] this IServiceCollection services)
+        public static IServiceCollection AddCommandHandlers([NotNull] this IServiceCollection services, ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
         {
             var commands = AppDomain.CurrentDomain
                                     .GetLoadedTypes()
@@ -50,7 +68,7 @@ namespace Pentagon.Dispatch
                 if (interfaces == null)
                     continue;
 
-                services.Add(ServiceDescriptor.Describe(serviceType: interfaces, implementationType: command, lifetime: ServiceLifetime.Singleton));
+                services.Add(ServiceDescriptor.Describe(serviceType: interfaces, implementationType: command, lifetime: serviceLifetime));
             }
 
             return services;
@@ -65,7 +83,7 @@ namespace Pentagon.Dispatch
         }
 
         [NotNull]
-        public static IServiceCollection AddQueryHandlers([NotNull] this IServiceCollection services)
+        public static IServiceCollection AddQueryHandlers([NotNull] this IServiceCollection services, ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
         {
             var commands = AppDomain.CurrentDomain
                                     .GetLoadedTypes()
@@ -81,7 +99,7 @@ namespace Pentagon.Dispatch
                 if (interfaces == null)
                     continue;
 
-                services.Add(ServiceDescriptor.Describe(serviceType: interfaces, implementationType: command, lifetime: ServiceLifetime.Singleton));
+                services.Add(ServiceDescriptor.Describe(serviceType: interfaces, implementationType: command, lifetime: serviceLifetime));
             }
 
             return services;
@@ -96,7 +114,7 @@ namespace Pentagon.Dispatch
         }
 
         [NotNull]
-        public static IServiceCollection AddEventHandlers([NotNull] this IServiceCollection services)
+        public static IServiceCollection AddEventHandlers([NotNull] this IServiceCollection services, ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
         {
             var commands = AppDomain.CurrentDomain
                                     .GetLoadedTypes()
@@ -112,7 +130,7 @@ namespace Pentagon.Dispatch
                 if (interfaces == null)
                     continue;
 
-                services.Add(ServiceDescriptor.Describe(serviceType: interfaces, implementationType: command, lifetime: ServiceLifetime.Singleton));
+                services.Add(ServiceDescriptor.Describe(serviceType: interfaces, implementationType: command, lifetime: serviceLifetime));
             }
 
             return services;
