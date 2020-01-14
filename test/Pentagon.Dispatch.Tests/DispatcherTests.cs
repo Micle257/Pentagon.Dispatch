@@ -6,6 +6,7 @@
 
 namespace Pentagon.Common.Dispatch.Tests
 {
+    using System.Threading;
     using Microsoft.Extensions.DependencyInjection;
     using Pentagon.Dispatch.Queries;
     using Threading;
@@ -23,7 +24,7 @@ namespace Pentagon.Common.Dispatch.Tests
 
             var service = new QueryDispatcher(di.GetRequiredService<IServiceScopeFactory>());
 
-            var response1 = service.QueryAsync(new Command1()).AwaitSynchronously();
+            var response1 = service.QueryAsync(new Command1(), CancellationToken.None).AwaitSynchronously();
         }
     }
 }

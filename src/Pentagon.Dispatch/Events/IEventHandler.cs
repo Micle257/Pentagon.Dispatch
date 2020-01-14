@@ -6,11 +6,12 @@
 
 namespace Pentagon.Dispatch.Events
 {
+    using System.Threading;
     using System.Threading.Tasks;
 
     public interface IEventHandler<in TEvent>
             where TEvent : class, IEvent
     {
-        Task HandleAsync(TEvent @event);
+        Task HandleAsync(TEvent @event, CancellationToken cancellationToken);
     }
 }
