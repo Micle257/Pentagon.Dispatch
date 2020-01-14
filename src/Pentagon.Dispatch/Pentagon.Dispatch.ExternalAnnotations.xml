@@ -48,4 +48,9 @@
       <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
     </parameter>
   </member>
+  <member name="M:Pentagon.Dispatch.Queries.IQueryHandler`2.HandleAsync(`0,System.Threading.CancellationToken)">
+    <parameter name="query">
+      <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
+    </parameter>
+  </member>
 </assembly>

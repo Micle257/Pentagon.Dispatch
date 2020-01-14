@@ -6,11 +6,13 @@
 
 namespace Pentagon.Dispatch.Queries
 {
+    using System.Threading;
     using System.Threading.Tasks;
+    using JetBrains.Annotations;
 
     public interface IQueryHandler<in TQuery, TResult>
             where TQuery : class, IQuery<TResult>
     {
-        Task<TResult> HandleAsync(TQuery query);
+        Task<TResult> HandleAsync([NotNull] TQuery query, CancellationToken cancellationToken);
     }
 }

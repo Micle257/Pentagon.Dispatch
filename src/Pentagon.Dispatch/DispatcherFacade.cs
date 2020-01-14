@@ -41,16 +41,16 @@ namespace Pentagon.Dispatch
                 _commandDispatcher.SendAsync(command: command, cancellationToken: cancellationToken);
 
         /// <inheritdoc />
-        public Task<TResult> QueryAsync<TResult>(IQuery<TResult> query) => _queryDispatcher.QueryAsync(query: query);
+        public Task<TResult> QueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken) => _queryDispatcher.QueryAsync(query: query, cancellationToken);
 
         /// <inheritdoc />
-        public Task<TResult> QueryAsync<TQuery, TResult>(TQuery query)
+        public Task<TResult> QueryAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken)
                 where TQuery : class, IQuery<TResult> =>
-                _queryDispatcher.QueryAsync(query: query);
+                _queryDispatcher.QueryAsync(query: query, cancellationToken);
 
         /// <inheritdoc />
-        public Task PublishAsync<T>(T @event)
+        public Task PublishAsync<T>(T @event, CancellationToken cancellationToken)
                 where T : class, IEvent =>
-                _eventDispatcher.PublishAsync(@event: @event);
+                _eventDispatcher.PublishAsync(@event: @event, cancellationToken);
     }
 }
