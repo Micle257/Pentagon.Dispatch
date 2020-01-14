@@ -19,21 +19,23 @@ namespace Pentagon.Dispatch.Queries
             _serviceFactory = serviceFactory;
         }
 
-        public async Task<TResult> QueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken)
+        public Task<TResult> QueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken)
         {
             using var scope       = _serviceFactory.CreateScope();
             var       handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResult));
-            dynamic   handler     = scope.ServiceProvider.GetRequiredService(serviceType: handlerType);
+            var   handler     = scope.ServiceProvider.GetRequiredService(serviceType: handlerType);
 
-            return await handler.HandleAsync((dynamic) query, cancellationToken);
+            var invoke = (Task<TResult>) handler.GetType().GetMethod(nameof(IQueryHandler<IQuery<int>, int>.HandleAsync)).Invoke(handler, new object[] {query, cancellationToken});
+
+            return invoke;
         }
 
-        public async Task<TResult> QueryAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken)
+        public Task<TResult> QueryAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken)
                 where TQuery : class, IQuery<TResult>
         {
             using var scope   = _serviceFactory.CreateScope();
             var       handler = scope.ServiceProvider.GetRequiredService<IQueryHandler<TQuery, TResult>>();
-            return await handler.HandleAsync(query: query, cancellationToken );
+            return handler.HandleAsync(query: query, cancellationToken );
         }
     }
 }
